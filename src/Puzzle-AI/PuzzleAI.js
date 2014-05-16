@@ -6,21 +6,46 @@ var PuzzleAI = (function(){
 
   AI.solve = function(b){
     board = b;
-    AI.breadthSearch();
+    return AI.breadthSearch();
   }
 
   AI.breadthSearch = function(){
-    var freeSpace = board.getFreeSpace();
 
-    var validSwaps = board.getValidSwaps();
+    var boards = [];
 
-    for (var i = 0; i < validSwaps.length; i++){
-      var newBoard = new Board(board.getPositions());
-      console.log("calling swap on: " + validSwaps[i])
-      newBoard.swap(validSwaps[i],freeSpace);
-      if (newBoard.isSolved){
-        console.log("solved with swap: " + validSwaps[i]);
-        board.swap(validSwaps[i],freeSpace);
+    boards.push(board);
+
+    while (boards.length > 0){
+      var currentBoard = boards.pop();
+
+      var freeSpace = currentBoard.getFreeSpace();
+
+      var swaps = ["swapUp","swapDown","swapLeft","swapRight"];
+
+      currentBoard.printPositions();
+
+      for (var i = 0; i < swaps.length; i++){
+        var swap_fn = swaps[i];
+        var newBoard = new Board(currentBoard.getPositions());
+
+        // perform the swap and get a boolean success indicator
+        var successful_swap = newBoard[swap_fn]();
+
+        if (successful_swap === true){
+          console.log("successfully swapped: " + swap_fn);
+          newBoard.printPositions();
+          if (newBoard.isSolved()){
+            console.log("solved!");
+            return newBoard;
+          }
+          else{
+            console.log("pushing board");
+            boards.push(newBoard);
+          }
+        }
+        else{
+          console.log("could not swap: " + swap_fn);
+        }
       }
     }
   }
