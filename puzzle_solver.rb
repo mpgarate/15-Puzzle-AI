@@ -4,8 +4,8 @@ require './puzzle_solver/ai.rb'
 class PuzzleSolver
   def self.solve(matrix)
     @board = Board.new(matrix)
-    @ai = AI.new
+    @ai = AI.new(@board)
 
-    puts @board
+    @ai.solve
   end
 end
