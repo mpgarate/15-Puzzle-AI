@@ -14,11 +14,7 @@ var Board = (function(){
   // constructor
   var Board = function(arr){
     
-    /// copy board values
-    for (var i = 0; i < arr.length; i++){
-      positions[i] = arr[i];
-    }
-
+    positions = arr;
     boardSize = positions.length;
     freeSpace = this.getPositionOf(null);
   }
@@ -88,9 +84,7 @@ var Board = (function(){
       var swapRow = freeRow + 1;
       var swapCol = freeCol;
 
-      swap([freeRow,freeCol],[swapRow,swapCol]);
-
-      return true;
+      return swap([freeRow,freeCol],[swapRow,swapCol]);
     }
   }
 
@@ -105,9 +99,7 @@ var Board = (function(){
       var swapRow = freeRow - 1;
       var swapCol = freeCol;
 
-      swap([freeRow,freeCol],[swapRow,swapCol]);
-
-      return true;
+      return swap([freeRow,freeCol],[swapRow,swapCol]);
     }
   }
 
@@ -122,9 +114,7 @@ var Board = (function(){
       var swapRow = freeRow;
       var swapCol = freeCol - 1;
 
-      swap([freeRow,freeCol],[swapRow,swapCol]);
-
-      return true;
+      return swap([freeRow,freeCol],[swapRow,swapCol]);
     }
   }
 
@@ -140,20 +130,28 @@ var Board = (function(){
       var swapRow = freeRow;
       var swapCol = freeCol +  1;
 
-      swap([freeRow,freeCol],[swapRow,swapCol]);
-
-      return true;
+      return swap([freeRow,freeCol],[swapRow,swapCol]);
     }
   }
 
+  // create a new board performing a swap
   // swap two positions in the grid
   // each position is an array of x,y coords
   function swap(pos1,pos2){
-    var tmp = positions[pos1[0]][pos1[1]];
 
-    positions[pos1[0]][pos1[1]] = positions[pos2[0]][pos2[1]];
+    var newBoard = [];
+
+    for (var i = 0; i < positions.length; i++){
+      newBoard[i] = positions[i];
+    }
+
+    var tmp = newBoard[pos1[0]][pos1[1]];
+
+    newBoard[pos1[0]][pos1[1]] = newBoard[pos2[0]][pos2[1]];
     
-    positions[pos2[0]][pos2[1]] = tmp;
+    newBoard[pos2[0]][pos2[1]] = tmp;
+
+    return new Board(newBoard);
   }
 
   // boolean check if table is in solved state. 

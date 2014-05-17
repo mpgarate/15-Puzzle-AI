@@ -13,38 +13,37 @@ var PuzzleAI = (function(){
 
     var boards = [];
 
+    var swaps = ["swapUp","swapDown","swapLeft","swapRight"];
     boards.push(board);
 
     while (boards.length > 0){
       var currentBoard = boards.pop();
 
-      var freeSpace = currentBoard.getFreeSpace();
-
-      var swaps = ["swapUp","swapDown","swapLeft","swapRight"];
+      console.log(boards.length + " TOTAL BOARDS");
 
       currentBoard.printPositions();
 
       for (var i = 0; i < swaps.length; i++){
         var swap_fn = swaps[i];
-        var newBoard = new Board(currentBoard.getPositions());
+        //var newBoard = new Board(currentBoard.getPositions());
 
-        // perform the swap and get a boolean success indicator
-        var successful_swap = newBoard[swap_fn]();
+        // perform the swap and get a new board or false
+        var newBoard = currentBoard[swap_fn]();
 
-        if (successful_swap === true){
+        if (newBoard === false){
+          console.log("could not swap: " + swap_fn);
+        }
+        else{
           console.log("successfully swapped: " + swap_fn);
-          newBoard.printPositions();
           if (newBoard.isSolved()){
             console.log("solved!");
             return newBoard;
           }
           else{
             console.log("pushing board");
+            newBoard.printPositions();
             boards.push(newBoard);
           }
-        }
-        else{
-          console.log("could not swap: " + swap_fn);
         }
       }
     }
