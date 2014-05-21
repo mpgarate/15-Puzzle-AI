@@ -40,7 +40,7 @@ class MinHeap
       parent = offset / 2
     end
 
-    if @nodes[parent].last == pair.last
+    if @nodes[parent].last == pair.last and @nodes[parent].first == pair.first
       puts @nodes[parent].first.to_s
       puts "==?"
       puts pair.first.to_s

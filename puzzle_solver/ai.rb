@@ -47,10 +47,9 @@ class AI
 
         #puts new_board.to_s
 
-        sym = new_board.matrix.to_s.to_sym
-        if visited[sym] == false
-          puts visited[sym]
-          visited[sym] = true
+        key = new_board.matrix
+        if visited[key] == false
+          visited[key] = true
           queue.push(new_board,new_board.score)
         end
       end
