@@ -138,6 +138,10 @@ class Board
     else
       h = 14 * x_distance + 10*(y_distance - x_distance)
     end
+
+    puts "got h #{h}" if h < 0
+
+    return h
   end
 
 
@@ -152,7 +156,7 @@ class Board
           target_col = @matrix[@size-1].length - 1
         else
           target_col = (val - 1) % @size
-          target_row = ((val - 1).to_f / @size.to_f).floor
+          target_row = ((val - 1).fdiv(@size)).floor
         end
         # puts "val: #{val} i: #{i} j:#{j} t_r: #{target_row} t_c: #{target_col}"
         score += diagonal_shortcut(i,target_row,j,target_col)

@@ -8,6 +8,8 @@ class AI
   def solve
     iterations = 0
 
+    visited = Hash.new(false)
+    visited[@board.matrix] = true
     queue = MinHeap.new
     queue.push(@board, @board.score)
 
@@ -45,7 +47,12 @@ class AI
 
         #puts new_board.to_s
 
-        queue.push(new_board,new_board.score)
+        sym = new_board.matrix.to_s.to_sym
+        if visited[sym] == false
+          puts visited[sym]
+          visited[sym] = true
+          queue.push(new_board,new_board.score)
+        end
       end
     end
   end
