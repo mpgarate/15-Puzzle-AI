@@ -1,5 +1,5 @@
 class Board
-  attr_accessor :blank_space, :matrix, :swap_history
+  attr_accessor :blank_space, :matrix, :swap_history, :score
 
   def initialize(m, sh = [])
     # set up the matrix
@@ -14,6 +14,7 @@ class Board
       @matrix[i] = row.dup
     end
 
+    calculate_score! unless defined? @score
 
     # get coordinates of blank space location
     @blank_space = find_blank_space
@@ -30,6 +31,7 @@ class Board
 
     remember_swap(name)
     @blank_space = find_blank_space
+    calculate_score!
   end
 
   def remember_swap(name)
@@ -126,6 +128,39 @@ class Board
   end
 
   private
+
+  def diagonal_shortcut(current_x, target_x, current_y, target_y)
+    x_distance = (current_x - target_x).abs
+    y_distance = (current_y - target_y).abs
+
+    if x_distance > y_distance
+      h = 14 * y_distance + 10*(x_distance - y_distance)
+    else
+      h = 14 * x_distance + 10*(y_distance - x_distance)
+    end
+  end
+
+
+  def calculate_score!
+    score = 0
+
+    @matrix.each_with_index do |row,i|
+      row.each_with_index do |val,j|
+        # get target location
+        if val == nil
+          target_row = @size - 1
+          target_col = @matrix[@size-1].length - 1
+        else
+          target_col = (val - 1) % @size
+          target_row = ((val - 1).to_f / @size.to_f).floor
+        end
+        # puts "val: #{val} i: #{i} j:#{j} t_r: #{target_row} t_c: #{target_col}"
+        score += diagonal_shortcut(i,target_row,j,target_col)
+      end
+    end
+
+    @score = score
+  end
 
   def is_valid_tile?(tile)
     x = tile[0]

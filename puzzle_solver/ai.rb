@@ -8,10 +8,10 @@ class AI
   def solve
     iterations = 0
 
-    queue = []
-    queue << @board
+    queue = MinHeap.new
+    queue.push(@board, @board.score)
 
-    while(queue.length > 0)
+    while(not queue.empty?)
       iterations += 1
 
       #if iterations > 100000
@@ -21,7 +21,7 @@ class AI
 
       puts "its: #{iterations}" if iterations % 10000 == 0
 
-      current_board = queue.shift
+      current_board = queue.pop_min
 
       if current_board.is_solved?
         puts "Solved!"
@@ -45,7 +45,7 @@ class AI
 
         #puts new_board.to_s
 
-        queue << new_board
+        queue.push(new_board,new_board.score)
       end
     end
   end
