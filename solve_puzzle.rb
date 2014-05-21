@@ -17,26 +17,37 @@ puzzle = [
           ]
 
 
-puzzle = [
-          [2, 13, 9, 8],
-          [nil, 14, 7, 3],
-          [1, 10, 11, 15],
-          [12, 4, 6, 5]
-          ]
 
 puzzle = PuzzleSolver.solve(puzzle)
 
 puzzle.print_swap_history
 
 puts puzzle.to_s
-=end
+=begin
 puzzle = [
       [1,6,2,4],
       [9,11,5,7],
       [13,nil,3,12],
       [14,10,8,15]
 ]
+=end
 
+=begin
+puzzle = [
+          [2, 13, 9, 8],
+          [nil, 14, 7, 3],
+          [1, 10, 11, 15],
+          [12, 4, 6, 5]
+          ]
+=end
+
+
+puzzle = [
+          [4,8,1,nil],
+          [10,7,11,3],
+          [14,2,13,15],
+          [9,6,12,5]
+          ]
 
 puzzle = PuzzleSolver.solve(puzzle)
 

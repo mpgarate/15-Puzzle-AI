@@ -49,6 +49,8 @@ class Board
       str << ","
     end
     puts str
+
+    puts "steps: #{@swap_history.length}"
   end
 
   def get_valid_swaps
@@ -144,6 +146,10 @@ class Board
     return h
   end
 
+  # slower alternative heuristic
+  def manhattan_method(current_x, target_x, current_y, target_y)
+    h = 10 * ((current_x - target_x).abs + (current_y - target_y).abs)
+  end
 
   def calculate_score!
     score = 0

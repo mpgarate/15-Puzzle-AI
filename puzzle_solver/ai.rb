@@ -9,7 +9,6 @@ class AI
     iterations = 0
 
     visited = Hash.new(false)
-    visited[@board.matrix] = true
     queue = MinHeap.new
     queue.push(@board, @board.score)
 
@@ -34,7 +33,7 @@ class AI
 
       #puts "branching from previous #{current_board.last_swap}"
 
-      valid_swaps = current_board.get_valid_swaps.shuffle
+      valid_swaps = current_board.get_valid_swaps #.shuffle
 
       valid_swaps.each do |valid_swap|
         new_board = Board.new(current_board.matrix, current_board.swap_history)
