@@ -1,18 +1,19 @@
 class Board
-  attr_accessor :blank_space, :matrix
+  attr_accessor :blank_space, :matrix, :swap_history
 
-  def initialize(m)
+  def initialize(m, sh = [])
     # set up the matrix
     # by duplicating the contents of m
     
     @size = m.length
 
-    @swap_history = []
+    @swap_history = sh.dup
 
     @matrix = []
     m.each_with_index do |row,i|
       @matrix[i] = row.dup
     end
+
 
     # get coordinates of blank space location
     @blank_space = find_blank_space
@@ -37,6 +38,15 @@ class Board
 
   def last_swap
     @swap_history.last
+  end
+
+  def print_swap_history
+    str = ""
+    @swap_history.each do |move|
+      str << move.to_s
+      str << ","
+    end
+    puts str
   end
 
   def get_valid_swaps
@@ -87,7 +97,7 @@ class Board
     @matrix.each_with_index do |row,i|
       row.each_with_index do |val,j|
         if i == @size - 1 and j == @size - 1
-          return fale if val != nil
+          return false if val != nil
         else
           return false if val != target_val
           target_val += 1
