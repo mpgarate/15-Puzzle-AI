@@ -1,10 +1,10 @@
 require './puzzle_solver.rb'
 
 puzzle = [
-            [  1,  2,  3,  4],
-            [  5,  6,  7,  8],
-            [  9, 10, 11, 12],
-            [ 13, 14, 15, nil]
+            [  1,  2,  3,  nil],
+            [  5,  7,  11,  4],
+            [  9, 6, 12, 8],
+            [ 13, 10, 14, 15]
           ]
 
 PuzzleSolver.solve(puzzle)

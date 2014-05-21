@@ -7,6 +7,8 @@ class Board
     
     @size = m.length
 
+    @swap_history = []
+
     @matrix = []
     m.each_with_index do |row,i|
       @matrix[i] = row.dup
@@ -16,37 +18,66 @@ class Board
     @blank_space = find_blank_space
   end
 
-  def swap!(pos1,pos2)
-    tmp = @matrix[pos1[0],pos1[1]]
-    @matrix[pos1[0],pos1[1]] = @matrix[pos2[0],pos2[1]]
-    @matrix[pos2[0],pos2[1]] = tmp
+  def swap!(swap)
+    pos1 = swap[0]
+    pos2 = swap[1]
+    name = swap[2]
+
+    tmp = @matrix[pos1[0]][pos1[1]]
+    @matrix[pos1[0]][pos1[1]] = @matrix[pos2[0]][pos2[1]]
+    @matrix[pos2[0]][pos2[1]] = tmp
+
+    remember_swap(name)
+    @blank_space = find_blank_space
+  end
+
+  def remember_swap(name)
+    @swap_history << name
+  end
+
+  def last_swap
+    @swap_history.last
   end
 
   def get_valid_swaps
     valid_swaps = []
+    #puts "blank space: #{@blank_space}"
+    #puts "last swap: #{@swap_history.last}"
 
-    b_col = @blank_space[0]
-    b_col_p1 = b_col + 1
-    b_col_m1 = b_col - 1
-    b_row = @blank_space[1]
+    b_row = @blank_space[0]
     b_row_p1 = b_row + 1
     b_row_m1 = b_row - 1
+    b_col = @blank_space[1]
+    b_col_p1 = b_col + 1
+    b_col_m1 = b_col - 1
 
     # up swap
-    up_tile = [b_row_p1, b_col]
-    valid_swaps << [@blank_space,up_tile] if is_valid_tile?(up_tile)
+    up_tile = [b_row_m1, b_col]
+
+    if is_valid_tile?(up_tile) and @swap_history.last != :down
+      valid_swaps << [@blank_space, up_tile, :up] 
+    end
 
     # down swap
-    down_tile = [b_row_m1, b_col]
-    valid_swaps << [@blank_space, down_tile] if is_valid_tile?(down_tile)
+    down_tile = [b_row_p1, b_col]
+    
+    if is_valid_tile?(down_tile) and @swap_history.last != :up
+      valid_swaps << [@blank_space, down_tile, :down]
+    end
 
     # left swap
     left_tile = [b_row, b_col_m1]
-    valid_swaps << [@blank_space, left_tile] if is_valid_tile?(left_tile)
+
+    if is_valid_tile?(left_tile) and @swap_history.last != :right
+      valid_swaps << [@blank_space, left_tile, :left]
+    end
 
     # right swap
     right_tile = [b_row, b_col_p1]
-    valid_swaps << [@blank_space, right_tile] if is_valid_tile?(right_tile)
+
+    if is_valid_tile?(right_tile) and @swap_history.last != :left
+      valid_swaps << [@blank_space, right_tile, :right]
+    end
 
     return valid_swaps
   end
@@ -66,13 +97,31 @@ class Board
     return true
   end
 
+
+  def to_s
+    str = ""
+
+    @matrix.each do |row|
+      str << "["
+      row.each_with_index do |item,index|
+        str << item.to_s
+        str << "nil" if item == nil
+        str << "," unless index == row.length - 1
+      end
+      str << "]\n"
+    end
+      str << "\n"
+
+    return str
+  end
+
   private
 
   def is_valid_tile?(tile)
     x = tile[0]
     y = tile[1]
 
-    if x < 0 or y < 0 or x > @size or y > @size
+    if x < 0 or y < 0 or x > @size - 1 or y > @size - 1
       return false
     else
       return true
@@ -87,6 +136,7 @@ class Board
         end
       end
     end
+    puts "found no blank space"
   end
 
 end
