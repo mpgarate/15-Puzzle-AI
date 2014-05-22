@@ -55,8 +55,6 @@ class Board
 
   def get_valid_swaps
     valid_swaps = []
-    #puts "blank space: #{@blank_space}"
-    #puts "last swap: #{@swap_history.last}"
 
     b_row = @blank_space[0]
     b_row_p1 = b_row + 1
@@ -103,7 +101,9 @@ class Board
         if i == @size - 1 and j == @size - 1
           return false if val != nil
         else
-          return false if val != target_val
+          if val != target_val
+            return false
+          end
           target_val += 1
         end
       end
@@ -141,8 +141,6 @@ class Board
       h = 14 * x_distance + 10*(y_distance - x_distance)
     end
 
-    puts "got h #{h}" if h < 0
-
     return h
   end
 
@@ -164,7 +162,7 @@ class Board
           target_col = (val - 1) % @size
           target_row = ((val - 1).fdiv(@size)).floor
         end
-        # puts "val: #{val} i: #{i} j:#{j} t_r: #{target_row} t_c: #{target_col}"
+
         score += diagonal_shortcut(i,target_row,j,target_col)
       end
     end
@@ -191,7 +189,6 @@ class Board
         end
       end
     end
-    puts "found no blank space"
   end
 
 end

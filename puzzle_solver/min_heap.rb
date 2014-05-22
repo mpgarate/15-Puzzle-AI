@@ -31,6 +31,7 @@ class MinHeap
   end
 
   def bubble_up(pair, offset)
+    iter = 0
     parent = offset / 2
 
     while (offset > 0 && @nodes[parent].last > pair.last)
@@ -38,13 +39,9 @@ class MinHeap
 
       offset = parent
       parent = offset / 2
-    end
 
-    #if @nodes[parent].last == pair.last and @nodes[parent].first == pair.first
-    #  puts @nodes[parent].first.to_s
-   #   puts "==?"
-    #  puts pair.first.to_s
-   # end  
+      iter += 1
+    end
   end
 
   def bubble_down(pair, offset)
