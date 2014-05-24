@@ -11,7 +11,7 @@ There are a number of improvements I have in mind.
 
 TODO:
 
-* It is not necessary to recompute the heuristic for each point on the grid for every new board. Since each board is a child of another board, the heuristic score can be adjusted by only calculating the changed tiles. This improvement may be negligible. 
+* ~~It is not necessary to recompute the heuristic for each point on the grid for every new board. Since each board is a child of another board, the heuristic score can be adjusted by only calculating the changed tiles. This improvement may be negligible.~~
 
 * Compare results with an iterative deepending algorithm like [IDA*](en.wikipedia.org/wiki/IDA*).
 
