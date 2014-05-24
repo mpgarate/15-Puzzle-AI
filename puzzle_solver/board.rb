@@ -31,7 +31,8 @@ class Board
 
     remember_swap(name)
     @blank_space = find_blank_space
-    calculate_score!
+    get_valid_swaps
+    update_score_for(swap[2])
   end
 
   def remember_swap(name)
@@ -64,31 +65,31 @@ class Board
     b_col_m1 = b_col - 1
 
     # up swap
-    up_tile = [b_row_m1, b_col]
+    @up_tile = [b_row_m1, b_col]
 
-    if is_valid_tile?(up_tile) and @swap_history.last != :down
-      valid_swaps << [@blank_space, up_tile, :up] 
+    if is_valid_tile?(@up_tile) and @swap_history.last != :down
+      valid_swaps << [@blank_space, @up_tile, :up] 
     end
 
     # down swap
-    down_tile = [b_row_p1, b_col]
+    @down_tile = [b_row_p1, b_col]
     
-    if is_valid_tile?(down_tile) and @swap_history.last != :up
-      valid_swaps << [@blank_space, down_tile, :down]
+    if is_valid_tile?(@down_tile) and @swap_history.last != :up
+      valid_swaps << [@blank_space, @down_tile, :down]
     end
 
     # left swap
-    left_tile = [b_row, b_col_m1]
+    @left_tile = [b_row, b_col_m1]
 
-    if is_valid_tile?(left_tile) and @swap_history.last != :right
-      valid_swaps << [@blank_space, left_tile, :left]
+    if is_valid_tile?(@left_tile) and @swap_history.last != :right
+      valid_swaps << [@blank_space, @left_tile, :left]
     end
 
     # right swap
-    right_tile = [b_row, b_col_p1]
+    @right_tile = [b_row, b_col_p1]
 
-    if is_valid_tile?(right_tile) and @swap_history.last != :left
-      valid_swaps << [@blank_space, right_tile, :right]
+    if is_valid_tile?(@right_tile) and @swap_history.last != :left
+      valid_swaps << [@blank_space, @right_tile, :right]
     end
 
     return valid_swaps
@@ -138,7 +139,7 @@ class Board
     if x_distance > y_distance
       h = 14 * y_distance + 10*(x_distance - y_distance)
     else
-      h = 14 * x_distance + 10*(y_distance - x_distance)
+      h = 14 * x_distance + 10 * (y_distance - x_distance)
     end
 
     return h
@@ -147,6 +148,48 @@ class Board
   # slower alternative heuristic
   def manhattan_method(current_x, target_x, current_y, target_y)
     h = 10 * ((current_x - target_x).abs + (current_y - target_y).abs)
+  end
+
+  def get_target_col(val)
+    (val - 1) % @size
+  end
+
+  def get_target_row(val)
+    ((val - 1).fdiv(@size)).floor
+  end
+
+  def update_score_for(sym)
+    change = 0
+
+    case sym
+    when :up
+      tile = @down_tile
+    when :down
+      tile = @up_tile
+    when :left
+      tile = @right_tile
+    when :right
+      tile = @left_tile
+    else
+      puts "ERROR: #{sym}"
+    end
+
+    x = tile[0]
+    y = tile[0]
+
+    val = matrix[x][y]
+
+
+    if val == nil
+      target_row = @size - 1
+      target_col = @matrix[@size-1].length - 1
+    else
+      target_col = get_target_col(val)
+      target_row = get_target_row(val)
+    end
+
+    @score += diagonal_shortcut(x,target_row,y,target_col)
+
   end
 
   def calculate_score!
@@ -159,15 +202,15 @@ class Board
           target_row = @size - 1
           target_col = @matrix[@size-1].length - 1
         else
-          target_col = (val - 1) % @size
-          target_row = ((val - 1).fdiv(@size)).floor
+          target_col = get_target_col(val)
+          target_row = get_target_row(val)
         end
 
         score += diagonal_shortcut(i,target_row,j,target_col)
       end
     end
 
-    @score = score
+    @score = score + @swap_history.length
   end
 
   def is_valid_tile?(tile)
